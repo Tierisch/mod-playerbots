@@ -2580,13 +2580,6 @@ void PlayerbotFactory::InitClassSpells()
         case CLASS_HUNTER:
             bot->learnSpell(2973, true);
             bot->learnSpell(75, true);
-            if (level >= 10)
-            {
-            bot->learnSpell(883, false);   // call pet
-            bot->learnSpell(1515, false);  // tame pet
-            bot->learnSpell(6991, false);  // feed pet
-            bot->learnSpell(982, false);   // revive pet
-            bot->learnSpell(2641, false);  // dismiss pet
             bot->learnSpell(196, true);    // 1H Axes
             bot->learnSpell(197, true);    // 2H Axes
             bot->learnSpell(201, true);    // 1H Swords
@@ -2599,6 +2592,13 @@ void PlayerbotFactory::InitClassSpells()
             bot->learnSpell(5011, true);   // Crossbows
             bot->learnSpell(227, true);    // Staves
             }
+            if (level >= 10)
+            {
+                bot->learnSpell(883, false);   // call pet
+                bot->learnSpell(1515, false);  // tame pet
+                bot->learnSpell(6991, false);  // feed pet
+                bot->learnSpell(982, false);   // revive pet
+                bot->learnSpell(2641, false);  // dismiss pet
             if (level >= 20)
             {
                 bot->learnSpell(200, true);  // Polearms

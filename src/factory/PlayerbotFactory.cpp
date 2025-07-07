@@ -2591,7 +2591,6 @@ void PlayerbotFactory::InitClassSpells()
             bot->learnSpell(266, true);    // Guns
             bot->learnSpell(5011, true);   // Crossbows
             bot->learnSpell(227, true);    // Staves
-            }
             if (level >= 10)
             {
                 bot->learnSpell(883, false);   // call pet
@@ -2599,6 +2598,7 @@ void PlayerbotFactory::InitClassSpells()
                 bot->learnSpell(6991, false);  // feed pet
                 bot->learnSpell(982, false);   // revive pet
                 bot->learnSpell(2641, false);  // dismiss pet
+            }    
             if (level >= 20)
             {
                 bot->learnSpell(200, true);  // Polearms

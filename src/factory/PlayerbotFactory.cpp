@@ -2499,11 +2499,29 @@ void PlayerbotFactory::InitClassSpells()
         case CLASS_WARRIOR:
             bot->learnSpell(78, true);
             bot->learnSpell(2457, true);
+            bot->learnSpell(196, true);    // 1H Axes
+            bot->learnSpell(197, true);    // 2H Axes
+            bot->learnSpell(198, true);    // 1H Maces
+            bot->learnSpell(199, true);    // 2H Maces
+            bot->learnSpell(201, true);    // 1H Swords
+            bot->learnSpell(202, true);    // 2H Swords
+            bot->learnSpell(2567, true);   // Thrown
+            bot->learnSpell(15590, true);  // Fist Weapons
+            bot->learnSpell(1180, true);   // Daggers
+            bot->learnSpell(264, true);    // Bows
+            bot->learnSpell(266, true);    // Guns
+            bot->learnSpell(5011, true);   // Crossbows
+            bot->learnSpell(227, true);    // Staves
+
             if (level >= 10)
             {
                 bot->learnSpell(71, false);    // Defensive Stance
                 bot->learnSpell(355, false);   // Taunt
                 bot->learnSpell(7386, false);  // Sunder Armor
+            }
+            if (level >= 20)
+            {
+                bot->learnSpell(200, true);  // Polearms
             }
             if (level >= 30)
             {
@@ -2513,14 +2531,33 @@ void PlayerbotFactory::InitClassSpells()
         case CLASS_PALADIN:
             bot->learnSpell(21084, true);
             bot->learnSpell(635, true);
+            bot->learnSpell(196, true);    // 1H Axes
+            bot->learnSpell(197, true);    // 2H Axes
+            bot->learnSpell(198, true);    // 1H Maces
+            bot->learnSpell(199, true);    // 2H Maces
+            bot->learnSpell(201, true);    // 1H Swords
+            bot->learnSpell(202, true);    // 2H Swords
             if (level >= 12)
             {
                 bot->learnSpell(7328, false);  // Redemption
+            }
+            if (level >= 20)
+            {
+                bot->learnSpell(200, true);  // Polearms
             }
             break;
         case CLASS_ROGUE:
             bot->learnSpell(1752, true);
             bot->learnSpell(2098, true);
+            bot->learnSpell(196, true);    // 1H Axes
+            bot->learnSpell(198, true);    // 1H Maces
+            bot->learnSpell(201, true);    // 1H Swords
+            bot->learnSpell(2567, true);   // Thrown
+            bot->learnSpell(15590, true);  // Fist Weapons
+            bot->learnSpell(1180, true);   // Daggers
+            bot->learnSpell(264, true);    // Bows
+            bot->learnSpell(266, true);    // Guns
+            bot->learnSpell(5011, true);   // Crossbows
             break;
         case CLASS_DEATH_KNIGHT:
             bot->learnSpell(45477, true);
@@ -2532,31 +2569,65 @@ void PlayerbotFactory::InitClassSpells()
             bot->learnSpell(50977, false);
             bot->learnSpell(49142, false);
             bot->learnSpell(48778, false);
+            bot->learnSpell(196, true);    // 1H Axes
+            bot->learnSpell(197, true);    // 2H Axes
+            bot->learnSpell(198, true);    // 1H Maces
+            bot->learnSpell(199, true);    // 2H Maces
+            bot->learnSpell(201, true);    // 1H Swords
+            bot->learnSpell(202, true);    // 2H Swords
+            bot->learnSpell(200, true);    // Polearms
             break;
         case CLASS_HUNTER:
             bot->learnSpell(2973, true);
             bot->learnSpell(75, true);
             if (level >= 10)
             {
-                bot->learnSpell(883, false);   // call pet
-                bot->learnSpell(1515, false);  // tame pet
-                bot->learnSpell(6991, false);  // feed pet
-                bot->learnSpell(982, false);   // revive pet
-                bot->learnSpell(2641, false);  // dismiss pet
+            bot->learnSpell(883, false);   // call pet
+            bot->learnSpell(1515, false);  // tame pet
+            bot->learnSpell(6991, false);  // feed pet
+            bot->learnSpell(982, false);   // revive pet
+            bot->learnSpell(2641, false);  // dismiss pet
+            bot->learnSpell(196, true);    // 1H Axes
+            bot->learnSpell(197, true);    // 2H Axes
+            bot->learnSpell(201, true);    // 1H Swords
+            bot->learnSpell(202, true);    // 2H Swords
+            bot->learnSpell(2567, true);   // Thrown
+            bot->learnSpell(15590, true);  // Fist Weapons
+            bot->learnSpell(1180, true);   // Daggers
+            bot->learnSpell(264, true);    // Bows
+            bot->learnSpell(266, true);    // Guns
+            bot->learnSpell(5011, true);   // Crossbows
+            bot->learnSpell(227, true);    // Staves
+            }
+            if (level >= 20)
+            {
+                bot->learnSpell(200, true);  // Polearms
             }
             break;
         case CLASS_PRIEST:
             bot->learnSpell(585, true);
             bot->learnSpell(2050, true);
+            bot->learnSpell(1180, true);   // Daggers
+            bot->learnSpell(198, true);    // 1H Maces
+            bot->learnSpell(227, true);    // Staves
+            bot->learnSpell(5009, true);   // Wands
             break;
         case CLASS_MAGE:
             bot->learnSpell(133, true);
             bot->learnSpell(168, true);
+            bot->learnSpell(1180, true);   // Daggers
+            bot->learnSpell(201, true);    // 1H Swords
+            bot->learnSpell(227, true);    // Staves
+            bot->learnSpell(5009, true);   // Wands
             break;
         case CLASS_WARLOCK:
             bot->learnSpell(687, true);
             bot->learnSpell(686, true);
             bot->learnSpell(688, false);  // summon imp
+            bot->learnSpell(1180, true);   // Daggers
+            bot->learnSpell(201, true);    // 1H Swords
+            bot->learnSpell(227, true);    // Staves
+            bot->learnSpell(5009, true);   // Wands
             if (level >= 10)
             {
                 bot->learnSpell(697, false);  // summon voidwalker
@@ -2573,16 +2644,32 @@ void PlayerbotFactory::InitClassSpells()
         case CLASS_DRUID:
             bot->learnSpell(5176, true);
             bot->learnSpell(5185, true);
+            bot->learnSpell(198, true);    // 1H Maces
+            bot->learnSpell(199, true);    // 2H Maces
+            bot->learnSpell(15590, true);  // Fist Weapons
+            bot->learnSpell(1180, true);   // Daggers
+            bot->learnSpell(227, true);    // Staves
             if (level >= 10)
             {
                 bot->learnSpell(5487, false);  // bear form
                 bot->learnSpell(6795, false);  // Growl
                 bot->learnSpell(6807, false);  // Maul
             }
+            if (level >= 20)
+            {
+                bot->learnSpell(200, true);  // Polearms
+            }
             break;
         case CLASS_SHAMAN:
             bot->learnSpell(403, true);
             bot->learnSpell(331, true);
+            bot->learnSpell(196, true);    // 1H Axes
+            bot->learnSpell(197, true);    // 2H Axes
+            bot->learnSpell(198, true);    // 1H Maces
+            bot->learnSpell(199, true);    // 2H Maces
+            bot->learnSpell(15590, true);  // Fist Weapons
+            bot->learnSpell(1180, true);   // Daggers
+            bot->learnSpell(227, true);    // Staves
             // bot->learnSpell(66747, true); // Totem of the Earthen Ring
             if (level >= 4)
             {

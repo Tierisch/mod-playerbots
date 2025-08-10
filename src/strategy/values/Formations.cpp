@@ -110,8 +110,42 @@ public:
 
     WorldLocation GetLocationInternal() override
     {
+        Player* followTarget = nullptr;
         Player* master = GetMaster();
-        if (!master)
+        Group* group = bot->GetGroup();
+
+        if (botAI->HasStrategy("follow tank", BOT_STATE_NON_COMBAT))
+        {
+            if (group)
+            {
+                Player* tankInSubgroup = nullptr;
+                Player* tankInRaid = nullptr;
+                for (GroupReference* ref = group->GetFirstMember(); ref; ref = ref->next())
+                {
+                    Player* member = ref->GetSource();
+                    if (!member || member == bot || !member->IsAlive() || bot->GetMapId() != member->GetMapId())
+                        continue;
+                    if (botAI->IsTank(member))
+                    {
+                        if (ref->getSubGroup() == bot->GetSubGroup() && !tankInSubgroup)
+                            tankInSubgroup = member;
+                        else if (!tankInRaid)
+                            tankInRaid = member;
+                    }
+                }
+                followTarget = tankInSubgroup ? tankInSubgroup : (tankInRaid ? tankInRaid : master);
+            }
+            else
+            {
+                followTarget = master;
+            }
+        }
+        else
+        {
+            followTarget = master;
+        }
+
+        if (!followTarget)
             return WorldLocation();
 
         float range = sPlayerbotAIConfig->followDistance;
@@ -120,14 +154,6 @@ public:
         time_t now = time(nullptr);
         if (!lastChangeTime || now - lastChangeTime >= 3)
         {
-            Player* master = GetMaster();
-            if (!master)
-                return WorldLocation();
-
-            float range = sPlayerbotAIConfig->followDistance;
-            float angle = GetFollowAngle();
-
-            time_t now = time(nullptr);
             if (!lastChangeTime || now - lastChangeTime >= 3)
             {
                 lastChangeTime = now;
@@ -136,34 +162,32 @@ public:
                 dr = sqrt(dx * dx + dy * dy);
             }
 
-            float x = master->GetPositionX() + cos(angle) * range + dx;
-            float y = master->GetPositionY() + sin(angle) * range + dy;
-            float z = master->GetPositionZ() + master->GetHoverHeight();
-            if (!master->GetMap()->CheckCollisionAndGetValidCoords(
-                    master, master->GetPositionX(), master->GetPositionY(), master->GetPositionZ(), x, y, z))
+            float x = followTarget->GetPositionX() + cos(angle) * range + dx;
+            float y = followTarget->GetPositionY() + sin(angle) * range + dy;
+            float z = followTarget->GetPositionZ() + followTarget->GetHoverHeight();
+            if (!followTarget->GetMap()->CheckCollisionAndGetValidCoords(
+                    followTarget, followTarget->GetPositionX(), followTarget->GetPositionY(), followTarget->GetPositionZ(), x, y, z))
             {
-                x = master->GetPositionX() + cos(angle) * range + dx;
-                y = master->GetPositionY() + sin(angle) * range + dy;
-                z = master->GetPositionZ() + master->GetHoverHeight();
-                master->UpdateAllowedPositionZ(x, y, z);
+                x = followTarget->GetPositionX() + cos(angle) * range + dx;
+                y = followTarget->GetPositionY() + sin(angle) * range + dy;
+                z = followTarget->GetPositionZ() + followTarget->GetHoverHeight();
+                followTarget->UpdateAllowedPositionZ(x, y, z);
             }
-            // bot->GetMap()->CheckCollisionAndGetValidCoords(bot, bot->GetPositionX(), bot->GetPositionY(),
-            // bot->GetPositionZ(), x, y, z);
-            return WorldLocation(master->GetMapId(), x, y, z);
+            return WorldLocation(followTarget->GetMapId(), x, y, z);
         }
 
-        float x = master->GetPositionX() + cos(angle) * range + dx;
-        float y = master->GetPositionY() + sin(angle) * range + dy;
-        float z = master->GetPositionZ() + master->GetHoverHeight();
-        if (!master->GetMap()->CheckCollisionAndGetValidCoords(master, master->GetPositionX(), master->GetPositionY(),
-                                                               master->GetPositionZ(), x, y, z))
+        float x = followTarget->GetPositionX() + cos(angle) * range + dx;
+        float y = followTarget->GetPositionY() + sin(angle) * range + dy;
+        float z = followTarget->GetPositionZ() + followTarget->GetHoverHeight();
+        if (!followTarget->GetMap()->CheckCollisionAndGetValidCoords(followTarget, followTarget->GetPositionX(), followTarget->GetPositionY(),
+                                                                   followTarget->GetPositionZ(), x, y, z))
         {
-            x = master->GetPositionX() + cos(angle) * range + dx;
-            y = master->GetPositionY() + sin(angle) * range + dy;
-            z = master->GetPositionZ() + master->GetHoverHeight();
-            master->UpdateAllowedPositionZ(x, y, z);
+            x = followTarget->GetPositionX() + cos(angle) * range + dx;
+            y = followTarget->GetPositionY() + sin(angle) * range + dy;
+            z = followTarget->GetPositionZ() + followTarget->GetHoverHeight();
+            followTarget->UpdateAllowedPositionZ(x, y, z);
         }
-        return WorldLocation(master->GetMapId(), x, y, z);
+        return WorldLocation(followTarget->GetMapId(), x, y, z);
     }
 
     float GetMaxDistance() override { return sPlayerbotAIConfig->followDistance + dr; }

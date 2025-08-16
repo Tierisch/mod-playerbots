@@ -20,6 +20,7 @@
 #include "FleeStrategy.h"
 #include "FollowMasterStrategy.h"
 #include "FollowTankStrategy.h"
+#include "DungeonPathStrategy.h"
 #include "GrindingStrategy.h"
 #include "GroupStrategy.h"
 #include "GuardStrategy.h"
@@ -202,6 +203,7 @@ public:
         creators["runaway"] = &MovementStrategyContext::runaway;
         creators["flee from adds"] = &MovementStrategyContext::flee_from_adds;
         creators["guard"] = &MovementStrategyContext::guard;
+        creators["dungeon path"] = &MovementStrategyContext::dungeon_path;
     }
 
 private:
@@ -211,6 +213,7 @@ private:
     static Strategy* stay(PlayerbotAI* botAI) { return new StayStrategy(botAI); }
     static Strategy* runaway(PlayerbotAI* botAI) { return new RunawayStrategy(botAI); }
     static Strategy* flee_from_adds(PlayerbotAI* botAI) { return new FleeFromAddsStrategy(botAI); }
+    static Strategy* dungeon_path(PlayerbotAI* botAI) { return new DungeonPathStrategy(botAI); }
 };
 
 class AssistStrategyContext : public NamedObjectContext<Strategy>

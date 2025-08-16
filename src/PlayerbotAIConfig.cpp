@@ -643,6 +643,8 @@ bool PlayerbotAIConfig::Initialize()
     sPlayerbotTextMgr->LoadBotTextChance();
     PlayerbotFactory::Init();
 
+    AiObjectContext::s_dungeonWaypointMgr.LoadWaypoints();
+
     AiObjectContext::BuildAllSharedContexts();
 
     if (sPlayerbotAIConfig->randomBotSuggestDungeons)

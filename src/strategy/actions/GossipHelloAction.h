@@ -16,6 +16,8 @@ public:
     GossipHelloAction(PlayerbotAI* botAI) : Action(botAI, "gossip hello") {}
 
     bool Execute(Event event) override;
+    // Overload for direct usage: interact with NPC by guid and optionally select a menu option
+    bool Execute(ObjectGuid guid, int32 menuToSelect = -1);
 
 private:
     void TellGossipMenus();

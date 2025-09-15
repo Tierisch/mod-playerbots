@@ -1,7 +1,8 @@
 #include "DungeonWaypointMgr.h"
 #include "Playerbots.h"
 
-void DungeonWaypointMgr::LoadWaypoints() {
+void DungeonWaypointMgr::LoadWaypoints()
+{
     QueryResult result = PlayerbotsDatabase.Query("SELECT map_id, dungeon_name, order_index, x, y, z, jump, pause, healer_mana_pct, next_index, interact_type, interact_guid, interact_param, comment, tell FROM playerbots_dungeon_waypoint ORDER BY map_id, dungeon_name, order_index");
     if (!result) return;
 
@@ -26,11 +27,14 @@ void DungeonWaypointMgr::LoadWaypoints() {
     } while (result->NextRow());
 }
 
-const DungeonPath* DungeonWaypointMgr::GetPath(uint32_t mapId, const std::string& dungeonName) const {
+const DungeonPath* DungeonWaypointMgr::GetPath(uint32_t mapId, const std::string& dungeonName) const
+{
     auto it = paths.find(mapId);
-    if (it != paths.end()) {
+    if (it != paths.end())
+    {
         auto jt = it->second.find(dungeonName);
-        if (jt != it->second.end()) {
+        if (jt != it->second.end())
+        {
             return &jt->second;
         }
     }

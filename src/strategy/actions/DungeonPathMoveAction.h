@@ -7,7 +7,8 @@
 #include "PlayerbotAI.h"
 
 
-class DungeonPathMoveAction : public MovementAction {
+class DungeonPathMoveAction : public MovementAction
+{
 public:
     DungeonPathMoveAction(PlayerbotAI* ai, DungeonWaypointMgr* mgr);
     bool Execute(Event event) override;

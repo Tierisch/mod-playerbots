@@ -6,7 +6,8 @@
 #include <string>
 #include <cstdint>
 
-struct DungeonWaypoint {
+struct DungeonWaypoint
+{
     float x, y, z;
     bool jump;
     uint32_t pause; // pause duration in ms, 0 = no pause
@@ -21,7 +22,8 @@ struct DungeonWaypoint {
 
 using DungeonPath = std::vector<DungeonWaypoint>;
 
-class DungeonWaypointMgr {
+class DungeonWaypointMgr
+{
 public:
     void LoadWaypoints();
     const DungeonPath* GetPath(uint32_t mapId, const std::string& dungeonName) const;

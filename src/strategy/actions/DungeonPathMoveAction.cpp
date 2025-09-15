@@ -128,11 +128,11 @@ bool DungeonPathMoveAction::Execute(Event event) {
                         botAI->TellMasterNoFacing(dbg.str());
                         GossipHelloAction gossipAction(botAI);
                         int32 menuOption = static_cast<int32>(wp.interact_param); // If interact_param is menu index
-                        bool interacted = gossipAction.Execute(foundNpc->GetGUID(), menuOption);
+                        bool interacted = gossipAction.Execute(foundNpc->GetGUID(), menuOption, true);
                         if (!interacted) {
                             // Try default greeting if menu option failed
                             botAI->TellMasterNoFacing("[DEBUG] No gossip menu options, trying default greeting.");
-                            gossipAction.Execute(foundNpc->GetGUID(), -1);
+                            gossipAction.Execute(foundNpc->GetGUID(), -1, true);
                         }
                     }
                 }

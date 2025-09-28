@@ -426,5 +426,5 @@ INSERT INTO `playerbots_dungeon_waypoint` (`map_id`, `dungeon_name`, `order_inde
 (43, 'WC', 422, -116, 154, -78, 0, 0, 0.6, 423, 0, 0, 0,'422', 1),
 (43, 'WC', 423, -121, 140, -78, 0, 0, 0.6, 424, 0, 0, 0,'423', 1),
 (43, 'WC', 424, -129, 136, -77, 0, 0, 0.6, 425, 0, 0, 0,'424', 1),
-(43, 'WC', 425, -136, 127, -78, 0, 0, 0.6, 426, 1, 3678, -1,'Pick up escort', 1), -- Check gossipmenu option, current is placeholder
+(43, 'WC', 425, -136, 127, -78, 0, 0, 0.6, 426, 1, 3678, -1,'Pick up escort', 1), -- Needs gossipmenu to start = 0 to start escort, add logic to run twice when not -1
 (43, 'WC', 426, -127, 136, -78, 0, 0, 0.6, 426, 0, 0, 0,'426', 1); -- End of WIP path

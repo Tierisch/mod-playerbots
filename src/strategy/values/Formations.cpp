@@ -116,42 +116,7 @@ public:
 
         if (botAI->HasStrategy("dungeon path", BOT_STATE_NON_COMBAT) || botAI->HasStrategy("follow tank", BOT_STATE_NON_COMBAT))
         {
-            if (group)
-            {
-                Player* mainTank = nullptr;
-                Player* tankInSubgroup = nullptr;
-                Player* tankInRaid = nullptr;
-                for (GroupReference* ref = group->GetFirstMember(); ref; ref = ref->next())
-                {
-                    Player* member = ref->GetSource();
-                    if (!member || member == bot || !member->IsAlive() || bot->GetMapId() != member->GetMapId())
-                        continue;
-                    if (PlayerbotAI::IsMainTank(member))
-                    {
-                        mainTank = member;
-                        break; // Highest priority, stop searching
-                    }
-                    if (botAI->IsTank(member))
-                    {
-                        if (ref->getSubGroup() == bot->GetSubGroup() && !tankInSubgroup)
-                            tankInSubgroup = member;
-                        else if (!tankInRaid)
-                            tankInRaid = member;
-                    }
-                }
-                if (mainTank)
-                    followTarget = mainTank;
-                else if (tankInSubgroup)
-                    followTarget = tankInSubgroup;
-                else if (tankInRaid)
-                    followTarget = tankInRaid;
-                else
-                    followTarget = master;
-            }
-            else
-            {
-                followTarget = master;
-            }
+            followTarget = PlayerbotAI::FindGroupTankToFollow(bot, master);
         }
         else
         {

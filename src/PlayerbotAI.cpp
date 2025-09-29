@@ -2210,6 +2210,50 @@ bool PlayerbotAI::IsMainTank(Player* player)
     return false;
 }
 
+Player* PlayerbotAI::FindGroupTankToFollow(Player* bot, Player* fallbackTarget)
+{
+    Group* group = bot->GetGroup();
+    if (!group)
+    {
+        return fallbackTarget;
+    }
+
+    Player* mainTank = nullptr;
+    Player* tankInSubgroup = nullptr;
+    Player* tankInRaid = nullptr;
+
+    for (GroupReference* ref = group->GetFirstMember(); ref; ref = ref->next())
+    {
+        Player* member = ref->GetSource();
+        if (!member || member == bot || !member->IsAlive() || bot->GetMapId() != member->GetMapId())
+            continue;
+
+        if (IsMainTank(member))
+        {
+            mainTank = member;
+            break; // Highest priority, stop searching
+        }
+
+        if (IsTank(member))
+        {
+            if (ref->getSubGroup() == bot->GetSubGroup() && !tankInSubgroup)
+                tankInSubgroup = member;
+            else if (!tankInRaid)
+                tankInRaid = member;
+        }
+    }
+
+    // Return in order of priority: MainTank > SubgroupTank > RaidTank > Fallback
+    if (mainTank)
+        return mainTank;
+    else if (tankInSubgroup)
+        return tankInSubgroup;
+    else if (tankInRaid)
+        return tankInRaid;
+    else
+        return fallbackTarget;
+}
+
 bool PlayerbotAI::IsBotMainTank(Player* player)
 {
     if (!player->GetSession()->IsBot() || !IsTank(player))

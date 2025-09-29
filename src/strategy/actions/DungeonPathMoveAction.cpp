@@ -133,7 +133,7 @@ size_t DungeonPathMoveAction::DetermineTargetIndex(const DungeonPath* path, Play
         // Resume at closest in [previousIndex, previousIndex+RESUME_SEARCH_RANGE]
         size_t resumeFloor = previousIndex;
         size_t resumeCeil = std::min(previousIndex + RESUME_SEARCH_RANGE, 
-                                   path->size() > 0 ? path->size() - 1 : 0);
+                                   path->size() - 1);
         size_t resumeIndex = resumeFloor;
         float minDistResume = std::numeric_limits<float>::max();
         
@@ -186,7 +186,7 @@ bool DungeonPathMoveAction::CheckGroupConditions(Player* bot, const DungeonWaypo
             uint32 mana = member->GetPower(POWER_MANA);
             uint32 maxMana = member->GetMaxPower(POWER_MANA);
             
-            if (maxMana > 0 && mana < waypoint.healer_mana_pct * maxMana)
+            if (maxMana > 0 && static_cast<float>(mana) < waypoint.healer_mana_pct * static_cast<float>(maxMana))
             {
                 return false;
             }

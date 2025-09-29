@@ -15,7 +15,7 @@ struct DungeonWaypoint
     uint32_t next_index; // index of next waypoint in path, 0 = entrance
     uint8_t interact_type; // 0: none, 1: gossip, 2: escort, 3: object, etc.
     uint32_t interact_guid; // GUID of NPC/object
-    uint32_t interact_param; // dialogue option, item GUID, etc.
+    int32_t interact_param; // dialogue option, item GUID, etc.
     std::string comment; // text to say at this waypoint
     bool tell; // whether to say the comment at this waypoint
 };

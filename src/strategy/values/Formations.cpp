@@ -112,7 +112,9 @@ public:
     {
         Player* followTarget = nullptr;
         Player* master = GetMaster();
-        Group* group = bot->GetGroup();
+
+        if (!master)
+            return WorldLocation();
 
         if (botAI->HasStrategy("dungeon path", BOT_STATE_NON_COMBAT) || botAI->HasStrategy("follow tank", BOT_STATE_NON_COMBAT))
         {

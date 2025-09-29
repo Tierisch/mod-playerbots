@@ -1,6 +1,5 @@
 #include "DungeonPathStrategy.h"
 #include "DungeonPathMoveAction.h"
-#include "DungeonWaypointMgr.h"
 #include "PlayerbotAI.h"
 #include "Playerbots.h"
 
@@ -8,13 +7,10 @@
 DungeonPathStrategy::DungeonPathStrategy(PlayerbotAI* ai)
     : NonCombatStrategy(ai)
 {
-    waypointMgr = new DungeonWaypointMgr();
-    waypointMgr->LoadWaypoints();
 }
 
 DungeonPathStrategy::~DungeonPathStrategy()
 {
-    delete waypointMgr;
 }
 
 NextAction** DungeonPathStrategy::getDefaultActions()

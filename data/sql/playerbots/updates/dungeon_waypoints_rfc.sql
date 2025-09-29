@@ -1,4 +1,3 @@
--- RFC waypoints
 DELETE FROM `playerbots_dungeon_waypoint` WHERE `map_id` = 389;
 
 INSERT INTO `playerbots_dungeon_waypoint` (`map_id`, `dungeon_name`, `order_index`, `x`, `y`, `z`, `jump`, `pause`,`healer_mana_pct`, `next_index`, `interact_type`, `interact_guid`, `interact_param`, `comment`, `tell`) VALUES

@@ -16,7 +16,6 @@ DungeonPathStrategy::~DungeonPathStrategy()
 NextAction** DungeonPathStrategy::getDefaultActions()
 {
         Player* bot = botAI->GetBot();
-        Group* group = bot->GetGroup();
         
         // Find the tank that should be leading
         Player* leadingTank = PlayerbotAI::FindGroupTankToFollow(bot, bot);
@@ -28,4 +27,4 @@ NextAction** DungeonPathStrategy::getDefaultActions()
             return NextAction::array(0, new NextAction("follow", 1.0f), nullptr);
 }
 
-void DungeonPathStrategy::InitTriggers(std::vector<TriggerNode*>& triggers) {}
+void DungeonPathStrategy::InitTriggers(std::vector<TriggerNode*>& /*triggers*/) {}

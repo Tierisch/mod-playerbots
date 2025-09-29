@@ -22,15 +22,19 @@ private:
     static constexpr uint32_t WAIT_FOR_GROUP_DELAY_MS = 3000;       // Time before rechecking group conditions when waiting (for healer mana, distance, etc.)
 
     size_t FindClosestWaypoint(const DungeonPath* path, Player* bot) const;
-    size_t DetermineTargetIndex(const DungeonPath* path, Player* bot, size_t closestIndex, float distToClosest);
+    size_t DetermineTargetIndex(const DungeonPath* path, Player* bot, size_t closestIndex);
     bool CheckGroupConditions(Player* bot, const DungeonWaypoint& waypoint) const;
-    void HandleWaypointInteraction(const DungeonWaypoint& waypoint, Player* bot);
+    void HandleWaypointInteraction(const DungeonWaypoint& waypoint, Player* bot, size_t waypointIndex);
     void HandleWaypointNotification(const DungeonWaypoint& waypoint);
     void HandleCombatEngagement(Player* bot, Event event);
 
     DungeonWaypointMgr* waypointMgr;
     size_t previousIndex = 0;
+    size_t lastInteractedIndex = SIZE_MAX;  // Track last waypoint that had interaction
+    size_t pendingMenuInteractionIndex = SIZE_MAX;  // Track waypoint waiting for menu selection
+    int32_t pendingMenuOption = -1;  // The menu option to select
     std::chrono::steady_clock::time_point lastNotifyTime = std::chrono::steady_clock::now() - std::chrono::seconds(30);
+    std::chrono::steady_clock::time_point menuInteractionTime = std::chrono::steady_clock::now();
 };
 
 #endif

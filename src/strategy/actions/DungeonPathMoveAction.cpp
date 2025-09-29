@@ -44,7 +44,7 @@ bool DungeonPathMoveAction::Execute(Event event)
     float dz = bot->GetPositionZ() - (*path)[closest].z;
     float distToClosest = sqrtf(dx*dx + dy*dy + dz*dz);
 
-    size_t index = DetermineTargetIndex(path, bot, closest, distToClosest);
+    size_t index = DetermineTargetIndex(path, bot, closest);
 
 
     if (distToClosest < WAYPOINT_REACHED_DISTANCE && index < path->size() - 1)
@@ -58,7 +58,7 @@ bool DungeonPathMoveAction::Execute(Event event)
             {
                 previousIndex = index; // Update previousIndex after successful move
                 
-                HandleWaypointInteraction(wp, bot);
+                HandleWaypointInteraction(wp, bot, index);
                 HandleWaypointNotification(wp);
                 
                 index = nextIdx;
@@ -116,7 +116,7 @@ size_t DungeonPathMoveAction::FindClosestWaypoint(const DungeonPath* path, Playe
     return closest;
 }
 
-size_t DungeonPathMoveAction::DetermineTargetIndex(const DungeonPath* path, Player* bot, size_t closestIndex, float distToClosest)
+size_t DungeonPathMoveAction::DetermineTargetIndex(const DungeonPath* path, Player* bot, size_t closestIndex)
 {
     // Path resumption logic
     float distToPrev = 0.0f;
@@ -166,7 +166,13 @@ bool DungeonPathMoveAction::CheckGroupConditions(Player* bot, const DungeonWaypo
     for (GroupReference* ref = group->GetFirstMember(); ref; ref = ref->next())
     {
         Player* member = ref->GetSource();
-        if (!member || !member->IsAlive()) continue;
+        if (!member) continue;
+        
+        // Check if any group member is dead - if so, wait for resurrection
+        if (!member->IsAlive())
+        {
+            return false;
+        }
         
         // Check if all members are on same map
         if (member->GetMapId() != bot->GetMapId())
@@ -191,15 +197,68 @@ bool DungeonPathMoveAction::CheckGroupConditions(Player* bot, const DungeonWaypo
                 return false;
             }
         }
+        
+        // Check tank health using same threshold as healer mana
+        if (botAI->IsTank(member))
+        {
+            uint32 health = member->GetHealth();
+            uint32 maxHealth = member->GetMaxHealth();
+            
+            if (maxHealth > 0 && static_cast<float>(health) < waypoint.healer_mana_pct * static_cast<float>(maxHealth))
+            {
+                return false;
+            }
+        }
     }
     
     return true;
 }
 
-void DungeonPathMoveAction::HandleWaypointInteraction(const DungeonWaypoint& waypoint, Player* bot)
+void DungeonPathMoveAction::HandleWaypointInteraction(const DungeonWaypoint& waypoint, Player* bot, size_t waypointIndex)
 {
+    // Check if we have a pending menu interaction to complete
+    if (pendingMenuInteractionIndex == waypointIndex)
+    {
+        auto now = std::chrono::steady_clock::now();
+        auto timeSinceFirstInteraction = std::chrono::duration_cast<std::chrono::milliseconds>(now - menuInteractionTime).count();
+        
+        if (timeSinceFirstInteraction >= 200) // 200ms delay
+        {
+            // Find the NPC again for menu selection
+            std::list<Unit*> npcs;
+            Acore::AnyUnitInObjectRangeCheck npcCheck(bot, NPC_INTERACT_DISTANCE);
+            Acore::UnitListSearcher<Acore::AnyUnitInObjectRangeCheck> npcSearcher(bot, npcs, npcCheck);
+            Cell::VisitObjects(bot, npcSearcher, NPC_INTERACT_DISTANCE);
+            
+            for (Unit* unit : npcs)
+            {
+                if (unit->ToCreature() && unit->ToCreature()->GetEntry() == waypoint.interact_guid)
+                {
+                    Creature* foundNpc = unit->ToCreature();
+                    GossipHelloAction gossipAction(botAI);
+                    gossipAction.Execute(foundNpc->GetGUID(), pendingMenuOption, true);
+                    
+                    botAI->TellMasterNoFacing("[DEBUG] Selected menu option " + std::to_string(pendingMenuOption));
+                    break;
+                }
+            }
+            
+            // Clear pending interaction and mark as completed
+            pendingMenuInteractionIndex = SIZE_MAX;
+            pendingMenuOption = -1;
+            lastInteractedIndex = waypointIndex;
+        }
+        return; // Don't do initial interaction while waiting for menu selection
+    }
+    
     if (waypoint.interact_type == 1 && waypoint.interact_guid != 0)
     {
+        // Check if we've already interacted with this waypoint
+        if (lastInteractedIndex == waypointIndex)
+        {
+            return; // Already interacted with this waypoint
+        }
+        
         std::list<Unit*> npcs;
         Acore::AnyUnitInObjectRangeCheck npcCheck(bot, NPC_INTERACT_DISTANCE);
         Acore::UnitListSearcher<Acore::AnyUnitInObjectRangeCheck> npcSearcher(bot, npcs, npcCheck);
@@ -224,13 +283,25 @@ void DungeonPathMoveAction::HandleWaypointInteraction(const DungeonWaypoint& way
             
             GossipHelloAction gossipAction(botAI);
             int32 menuOption = static_cast<int32>(waypoint.interact_param);
-            bool interacted = gossipAction.Execute(foundNpc->GetGUID(), menuOption, true);
             
-            if (!interacted)
+            if (menuOption == -1)
             {
-                // Try default greeting if menu option failed
-                botAI->TellMasterNoFacing("[DEBUG] No gossip menu options, trying default greeting.");
+                // Simple greeting only
                 gossipAction.Execute(foundNpc->GetGUID(), -1, true);
+                // Mark as fully completed
+                lastInteractedIndex = waypointIndex;
+            }
+            else
+            {
+                // Two-step process: greeting first
+                gossipAction.Execute(foundNpc->GetGUID(), -1, true);
+                
+                // Set up for second interaction
+                pendingMenuInteractionIndex = waypointIndex;
+                pendingMenuOption = menuOption;
+                menuInteractionTime = std::chrono::steady_clock::now();
+                
+                // Don't mark as completed yet - wait for menu selection
             }
         }
     }
